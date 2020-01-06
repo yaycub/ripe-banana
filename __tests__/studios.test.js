@@ -4,6 +4,7 @@ const request = require('supertest');
 const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
+const Studio = require('../lib/models/Studio');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -16,5 +17,9 @@ describe('app routes', () => {
 
   afterAll(() => {
     return mongoose.connection.close();
+  });
+
+  it('can get all studios', () => {
+    
   });
 });
