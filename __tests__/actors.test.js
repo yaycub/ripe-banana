@@ -5,6 +5,8 @@ const app = require('../lib/app');
 const connect = require('../lib/utils/connect');
 const mongoose = require('mongoose');
 const Actor = require('../lib/models/Actor');
+const Studio = require('../lib/models/Studio');
+const Film = require('../lib/models/Film');
 
 describe('app routes', () => {
   beforeAll(() => {
@@ -31,4 +33,32 @@ describe('app routes', () => {
         expect(res.body).toMatchObject(JSON.parse(JSON.stringify(actors)));
       });
   });  
+
+  it('can get an actor by id', async() => {
+    const actor = await Actor.create({ name: 'Jacob', dob: new Date('1987-07-26'), pob: 'Philippines' });
+    const studio = await Studio.create({ name: 'MGM', address: { city: 'LA', state: 'California', country: 'USA' } });
+    const film = await Film.create({
+      title: 'A film',
+      studio: studio._id,
+      released: 2020,
+      cast: [
+        { actor: actor._id } 
+      ]
+    });
+    
+    return request(app)
+      .get(`/api/v1/actors/${actor._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: actor._id.toString(),
+          name: actor.name,
+          dob: actor.dob.toISOString(),
+          pob: actor.pob,
+          films: [
+            { title: film.title, released:film.released, _id: film._id.toString() }
+          ],
+          __v: 0
+        });
+      });
+  });
 });
