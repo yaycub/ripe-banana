@@ -19,7 +19,16 @@ describe('app routes', () => {
     return mongoose.connection.close();
   });
 
-  it('can get all studios', () => {
-    
+  it('can get all studios', async() => {
+    const studios = await Studio.create([
+      { name: 'MGM' },
+      { name: 'Universal' }
+    ]);
+
+    return request(app)
+      .get('/api/v1/studios')
+      .then(res => {
+        expect(res.body).toMatchObject(JSON.parse(JSON.stringify(studios)));
+      });
   });
 });
