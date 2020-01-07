@@ -90,4 +90,35 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can delete a reviewer with no reviews', async() => {
+    const reviewer = await Reviewer.create({ name: 'bob', company: 'bob.com' });
+
+    return request(app)
+      .delete(`/api/v1/reviewer/${reviewer._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'bob',
+          company: 'bob.com'
+        });
+      });
+  });
+
+  it('can not delete a reviewer if they have reviews', async() => {
+    const studio = await Studio.create({ name: 'MGM' });
+    const film = await Film.create({
+      title: 'a film',
+      studio: studio._id,
+      released: 1945,
+    });
+    const reviewer = await Reviewer.create({ name: 'bob', company: 'bob.com' });
+    await Review.create({ rating: 1, reviewer: reviewer._id, review: 'a review', film: film._id });
+
+    return request(app)
+      .delete(`/api/v1/reviewer/${reviewer._id}`)
+      .then(res => {
+        expect(res.body.message).toEqual('You can not delete a reviewer with reviews');
+      });
+  });
 });
