@@ -57,4 +57,28 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can create a studio', () => {
+    return request(app) 
+      .post('/api/v1/studios')
+      .send({
+        name: 'MGM',
+        address: {
+          city: 'LA',
+          state: 'California',
+          country: 'USA'
+        }
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'MGM',
+          address: {
+            city: 'LA',
+            state: 'California',
+            country: 'USA'
+          }
+        });
+      });
+  });
 });
