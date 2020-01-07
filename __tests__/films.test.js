@@ -36,6 +36,7 @@ describe('app routes', () => {
     return request(app)
       .get('/api/v1/films/')
       .then(res => {
+        console.log(res.body);
         expect(res.body).toContainEqual({
           _id: film._id.toString(),
           title: film.title,
