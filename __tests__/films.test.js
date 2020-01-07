@@ -73,8 +73,40 @@ describe('app routes', () => {
           studio: { _id: studio._id.toString(), name: studio.name },
           released: 1945,
           cast: expect.any(Array),
-          reviews: expect.any(Array),
-          __v: 0
+          reviews: expect.any(Array)
+        });
+      });
+  });
+
+  it('can create a film', async() => {
+    const actor = await Actor.create({ name: 'Jacob' });
+    const studio = await Studio.create({ name: 'MGM' });
+
+    return request(app)
+      .post('/api/v1/films')
+      .send({
+        title: 'Best movie',
+        studio: studio._id,
+        released: 2019,
+        cast: [
+          {
+            role: 'Lead',
+            actor: actor._id
+          }
+        ]
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          title: 'Best movie',
+          studio: studio._id.toString(),
+          released: 2019,
+          cast: [
+            {
+              role: 'Lead',
+              actor: actor._id.toString()
+            }
+          ]
         });
       });
   });
