@@ -51,4 +51,32 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can create a review', async() => {
+    const reviewer = await Reviewer.create({ name: 'bob', company: 'bobs company' });
+    const studio = await Studio.create({ name: 'MGM' });
+    const film = await Film.create({
+      title: 'Best Film',
+      studio: studio._id,
+      released: 1945
+    });
+
+    return request(app)
+      .post('/api/v1/reviews')
+      .send({
+        rating: 3,
+        reviewer: reviewer._id,
+        review: 'This is such a good movie review',
+        film: film._id
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          rating: 3,
+          reviewer: reviewer._id.toString(),
+          review: 'This is such a good movie review',
+          film: film._id.toString()
+        });
+      });
+  });
 });
