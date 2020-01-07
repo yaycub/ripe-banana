@@ -46,8 +46,7 @@ describe('app routes', () => {
             _id: review._id.toString(),
             rating: review.rating,
             review: review.review,
-            film: { _id: film._id.toString(), title: film.title },
-            __v: 0
+            film: { _id: film._id.toString(), title: film.title }
           });
         });
       });
