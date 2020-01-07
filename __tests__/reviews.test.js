@@ -79,4 +79,32 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can delete a review', async() => {
+    const reviewer = await Reviewer.create({ name: 'bob', company: 'bobs company' });
+    const studio = await Studio.create({ name: 'MGM' });
+    const film = await Film.create({
+      title: 'Best Film',
+      studio: studio._id,
+      released: 1945
+    });
+    const review = await Review.create({ 
+      rating: 5, 
+      reviewer: reviewer._id, 
+      review: 'this is a review', 
+      film: film._id 
+    });
+
+    return request(app)
+      .delete(`/api/v1/reviews/${review._id}`)
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: review._id.toString(),
+          rating: 5, 
+          reviewer: reviewer._id.toString(), 
+          review: 'this is a review', 
+          film: film._id.toString()
+        });
+      });
+  });
 });
