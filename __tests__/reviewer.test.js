@@ -59,4 +59,20 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can create a reviewer', () => {
+    return request(app)
+      .post('/api/v1/reviewer')
+      .send({
+        name: 'jacob',
+        company: 'jacobscompany'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'jacob',
+          company: 'jacobscompany'
+        });
+      });
+  });
 });
