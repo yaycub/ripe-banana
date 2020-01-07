@@ -75,4 +75,19 @@ describe('app routes', () => {
         });
       });
   });
+
+  it('can update a reviewer by id', async() => {
+    const reviewer = await Reviewer.create({ name: 'bob', company: 'bob.com' });
+
+    return request(app)
+      .patch(`/api/v1/reviewer/${reviewer._id}`)
+      .send({ company: 'notbob.com' })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'bob',
+          company: 'notbob.com'
+        });
+      });
+  });
 });
