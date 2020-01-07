@@ -56,8 +56,25 @@ describe('app routes', () => {
           pob: actor.pob,
           films: [
             { title: film.title, released:film.released, _id: film._id.toString() }
-          ],
-          __v: 0
+          ]
+        });
+      });
+  });
+
+  it('can create an actor', () => {
+    return request(app)
+      .post('/api/v1/actors')
+      .send({
+        name: 'Jacob',
+        dob: new Date('1987-07-26'),
+        pob: 'Philippines'
+      })
+      .then(res => {
+        expect(res.body).toEqual({
+          _id: expect.any(String),
+          name: 'Jacob',
+          dob: new Date('1987-07-26').toISOString(),
+          pob: 'Philippines'
         });
       });
   });
