@@ -51,6 +51,8 @@ describe('app routes', () => {
     return request(app)
       .get(`/api/v1/reviewer/${reviewer._id}`)
       .then(res => {
+
+        console.log(res.body);
         expect(res.body).toEqual({
           _id: reviewer._id.toString(),
           name: reviewer.name,
